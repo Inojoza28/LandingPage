@@ -1,0 +1,156 @@
+@(products: List[Product], revenues: List[Revenue])
+
+@main("FinTech Solutions - Soluções Financeiras Inteligentes") {
+    <!-- Hero Section -->
+    <header class="jumbotron jumbotron-fluid bg-light">
+        <div class="container text-center">
+            <h1 class="display-4">FinTech Solutions</h1>
+            <p class="lead">Transformando o futuro financeiro com tecnologia de ponta</p>
+            <a href="#contato" class="btn btn-primary btn-lg">Entre em contato</a>
+        </div>
+    </header>
+
+    <!-- Sobre Section -->
+    <section id="sobre" class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2 class="mb-4">Sobre a FinTech Solutions</h2>
+                    <p>A FinTech Solutions é uma empresa inovadora no setor financeiro, fundada em 2020 com a missão de democratizar o acesso a serviços financeiros de qualidade através da tecnologia.</p>
+                    <p>Nossa equipe é formada por especialistas em finanças, tecnologia e experiência do usuário, trabalhando juntos para criar soluções que simplificam a vida financeira de nossos clientes.</p>
+                    <p>Acreditamos que a tecnologia pode transformar a maneira como as pessoas lidam com dinheiro, tornando processos complexos em experiências simples e intuitivas.</p>
+                </div>
+                <div class="col-lg-6">
+                    <img src="@routes.Assets.versioned("images/about.jpg")" alt="Sobre a FinTech Solutions" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Serviços Section -->
+    <section id="servicos" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">Nossos Serviços</h2>
+            <div class="row">
+                @for(product <- products) {
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow">
+                            <img src="@product.getImageUrl()" class="card-img-top" alt="@product.getName()">
+                            <div class="card-body">
+                                <h5 class="card-title">@product.getName()</h5>
+                                <p class="card-text">@product.getDescription()</p>
+                                <p class="card-text text-primary font-weight-bold">R$ @String.format("%.2f", product.getPrice())</p>
+                            </div>
+                            <div class="card-footer bg-white border-0">
+                                <a href="#contato" class="btn btn-outline-primary btn-block">Saiba mais</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- Faturamento Section -->
+    <section id="faturamento" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Faturamento Mensal</h2>
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contato Section -->
+    <section id="contato" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">Entre em Contato</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <form>
+                        <div class="form-group">
+                            <label for="name">Nome</label>
+                            <input type="text" class="form-control" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Assunto</label>
+                            <input type="text" class="form-control" id="subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Mensagem</label>
+                            <textarea class="form-control" id="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Enviar Mensagem</button>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100 bg-primary text-white">
+                        <div class="card-body">
+                            <h4 class="card-title">Informações de Contato</h4>
+                            <p class="card-text"><i class="fas fa-map-marker-alt mr-2"></i> Av. Paulista, 1000 - São Paulo, SP</p>
+                            <p class="card-text"><i class="fas fa-phone mr-2"></i> (11) 9999-9999</p>
+                            <p class="card-text"><i class="fas fa-envelope mr-2"></i> contato@fintechsolutions.com.br</p>
+                            <hr class="my-4 bg-light">
+                            <h5>Horário de Atendimento</h5>
+                            <p>Segunda a Sexta: 9h às 18h</p>
+                            <p>Sábado: 9h às 13h</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Configuração do gráfico de faturamento
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('revenueChart').getContext('2d');
+            var months = [@Html(revenues.map(r => "'" + r.getMonth() + "'").mkString(", "))];
+            var amounts = [@Html(revenues.map(r => r.getAmount().toString).mkString(", "))];
+            
+            var chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Faturamento Mensal (R$)',
+                        data: amounts,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function(value) {
+                                    return 'R$ ' + value.toLocaleString('pt-BR');
+                                }
+                            }
+                        }]
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                return 'R$ ' + Number(tooltipItem.yLabel).toLocaleString('pt-BR');
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}
