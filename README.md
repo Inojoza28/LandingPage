@@ -1,7 +1,5 @@
 # FinTech Solutions - Landing Page
 
-![FinTech Solutions Logo](https://via.placeholder.com/150x50?text=FinTech+Solutions)
-
 ## 📋 Visão Geral
 
 Este projeto é uma landing page completa desenvolvida com Play Framework 2.6, PostgreSQL 11 e Bootstrap 4.6, criada para atender aos requisitos do teste prático da Pague Bem Brasil. A aplicação apresenta uma empresa fictícia de tecnologia financeira, com áreas dinâmicas para exibição de serviços/produtos, gráfico de faturamento e formulário de contato.
