@@ -129,7 +129,7 @@ GRANT ALL PRIVILEGES ON DATABASE playapp_db TO playapp;
 
 1. Navegue até o diretório do projeto:
    ```bash
-   cd caminho/para/projeto_completo
+   cd LandingPage
    ```
 
 2. Execute a aplicação:
